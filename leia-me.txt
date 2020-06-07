@@ -3,4 +3,6 @@ README.md contém informações sobre a realização desta parte do trabalho...
 
 Por favor abrir o README.md.
 
+Também pode abrir o trabalho em https://github.com/CarlosmcDelgado/utad-sensor-ph
+
 Obrigado
