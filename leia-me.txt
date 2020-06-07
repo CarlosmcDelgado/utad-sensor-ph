@@ -1,0 +1,6 @@
+
+README.md contém informações sobre a realização desta parte do trabalho...
+
+Por favor abrir o README.md.
+
+Obrigado
