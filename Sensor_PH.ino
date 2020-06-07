@@ -1,86 +1,88 @@
 /*
-  Carlos Delgado 
-  Maria Inês
-
-  SENSOR PH
+Carlos Delgado
+Maria Inês
 */
 
 #include <MKRWAN.h>
-
-LoRaModem modem;
-
-#include"arduino_secrets.h"
+#include "arduino_secrets.h"
 
 String appEui = SECRET_APP_EUI;
 String appKey = SECRET_APP_KEY;
-void setup() {
- 
-  Serial.begin(115200);
-  while (!Serial);
 
-  if (!modem.begin(EU868)) {
+// Select your region (AS923, AU915, EU868, KR920, IN865, US915, US915_HYBRID)
+_lora_band region = EU868;
+
+LoRaModem modem(Serial1);
+
+unsigned long timeUpload;
+uint16_t voltage = 0;
+float avgV = 0;
+uint8_t txBuffer[1];
+
+void setup()
+{
+
+  Serial.begin(115200);
+  pinMode(A0, INPUT);
+  time = millis();
+  timeUpload = millis();
+
+  while (!Serial)
+  {
+  }
+
+  if (!modem.begin(region))
+  {
     Serial.println("Falha ao iniciar o módulo");
-    while (1) {}
+    while (1)
+    {
+    }
   };
-  Serial.print("A versão do seu módulo é: ");
-  Serial.println(modem.version());
-  Serial.print("O EUI do seu dispositivo é: ");
-  Serial.println(modem.deviceEUI());
 
   int connected = modem.joinOTAA(appEui, appKey);
-  if (!connected) {
-    Serial.println("Algo deu errado");
-    while (1){}
+  if (!connected)
+  {
+    Serial.println("Algo deu errado; você é interior? Mova-se para perto de uma janela e tente novamente");
+    while (1)
+    {
+    }
   }
 
   modem.minPollInterval(60);
+  // NOTA: modem só permite enviar msg no mínimo a cada 2 min
 }
 
- void loop() {
-  Serial.println();
-  Serial.println("Digite uma mensagem para enviar à rede");
-  Serial.println("(verifique se 'NL' de final de linha está ativado)");
+void loop()
+{
 
-  while(!Serial.available());
-  String msg = Serial.readStringUntil('\n');
+  // Processar leitrura - calculo da media de ph
+  voltage = analogRead(A0);
+  avgV = avgV * 0.6 + voltage * 0.4;
+  
+  // Send values to "the network of things" minuto a minuto (60000ms)
+  if (millis() - timeUpload > 60000)
+  {
+    int aux = (int)avgV * (5.0 / 1023.0) * 3.5 * 10 + 0.55; 
+    txBuffer[0] = aux & 0xff;
+    //Serial.println(txBuffer[0], HEX);
 
-  Serial.println();
-  Serial.print("Sending:" + msg + " - ");
-  for (unsigned int i = 0; i < msg.length(); i++){
-    Serial.print(msg[i] >> 4, HEX);
-    Serial.print(msg[i] & 0xF, HEX);
-    Serial.print(" ");
+    // Sending data
+    int err;
+    modem.beginPacket();
+    modem.write(txBuffer);
+    err = modem.endPacket(true);
+    if (err > 0)
+    {
+      Serial.println("Mensagem enviada corretamente!");
     }
-  Serial.println();
+    else
+    {
+      Serial.println("Erro ao enviar mensagem:(");
+      Serial.println("(Você pode enviar uma quantidade limitada de mensagens por minuto, dependendo da intensidade do sinal");
+      Serial.println("Pode variar de 1 mensagem a cada dois segundos a 1 mensagem a cada minuto)");
+    }
 
-  int err;
-  modem.beginPacket();
-  modem.print(msg);
-  err = modem.endPacket(true);
-  if (err > 0){
-    Serial.println("Mensagem enviada corretamente!");
-    }else{
-      Serial.println("Erro ao enviar mensagem :(");
-      Serial.println("(Você pode enviar uma quantidade limitada de mensagens por minuto, dependendo da intensidade do sinal)");
-      Serial.println("Pode variar de 1 mensagem a cada dois segundos");
-         }
-   
-  delay(1000);
-  if (!modem.available()){
-      Serial.println("Nenhuma mensagem de downlink recebida no momento.");
-      return;
-      }
-  char rcv[64];
-  int i = 0;
-  while (modem.available()){
-        rcv[i++] = (char)modem.read();
+    // Reset timer
+    timeUpload = millis();
   }
-  Serial.print("Received: ");
-  for (unsigned int j = 0; j < i; j++){
-    Serial.print(rcv[j] >> 4, HEX);
-    Serial.print(rcv[j] & 0xF, HEX );
-    Serial.print(" ");
-  }
-  Serial.println();
-     
 }
