@@ -230,7 +230,7 @@ Key: X5XREVFUYIUR9GME
 - Selecionar integração com _ThingsSpeak IoT Analytics with MATLAB_
 - Preencher os campos
 
-![integration](./img/add_integration.png)
+![integration](./img/ADD_INTEGRATION.png)
 
 </div>
 
