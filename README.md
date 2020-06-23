@@ -94,8 +94,17 @@ Apresentação das partes mais importantes do código e uma breve explicação d
   // Processamento da leitura - Calculo da media de ph
   voltage = analogRead(A0);
   avgV = avgV * 0.6 + voltage * 0.4;
+}
+```
 
-  // Enviar valores para "the network of things" de minuto a minuto (60000ms)
+## Enviar os dados para o _The Things Network_
+
+### Enviar dados
+
+O código encontra-se nos ficheiros `Sensor_PH.ino` e `arduino_secrets.h`
+
+```c
+ // Enviar valores para "the network of things" de minuto a minuto (60000ms)
   if (millis() - timeUpload > 60000)
   {
 
@@ -108,47 +117,10 @@ Apresentação das partes mais importantes do código e uma breve explicação d
     modem.beginPacket();
     modem.write(txBuffer);
     err = modem.endPacket(true);
-    if (err > 0)
-    {
-      Serial.println("Mensagem enviada corretamente!");
-    }
-    else
-    {
-      Serial.println("Erro ao enviar mensagem:(");
-      Serial.println("(Você pode enviar uma quantidade limitada de mensagens por minuto, dependendo da intensidade do sinal");
-      Serial.println("Pode variar de 1 mensagem a cada dois segundos a 1 mensagem a cada minuto)");
-    }
 
     // Redefinir temporizador
     timeUpload = millis();
   }
-}
-  
-```
-
-## Enviar os dados para o _The Things Network_
-
-### Enviar dados
-
-O código encontra-se nos ficheiros `Sensor_PH.ino` e `arduino_secrets.h`
-
-```c
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 ## Payload Formats
