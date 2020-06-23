@@ -63,7 +63,7 @@ __Procedimento:__
 
 <div style="width:550px;">
 
-![register device](./img/register_device.png)
+![register device](./Imagens/register_device.png)
 
 </div>
 
