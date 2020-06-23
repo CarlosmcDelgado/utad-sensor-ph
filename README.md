@@ -94,7 +94,6 @@ Apresentação das partes mais importantes do código e uma breve explicação d
   // Processamento da leitura - Calculo da media de ph
   voltage = analogRead(A0);
   avgV = avgV * 0.6 + voltage * 0.4;
-}
 ```
 
 ## Enviar os dados para o _The Things Network_
