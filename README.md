@@ -214,8 +214,8 @@ __No _The Things Network_ :__
 Para testar a integração:
 
 - Selecionar um `device`
-- fazer _scroll_ até `Simulate Uplink`
-- intrduzir valores para teste e clicar em `Send`
+- Fazer _scroll_ até `Simulate Uplink`
+- Intrduzir valores para teste e clicar em `Send`
 
 __No _ThingsSpeak_ :__
 
