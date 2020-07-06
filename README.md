@@ -22,7 +22,7 @@ Pretende-se com este projeto estudar o que são sensores, e também, o que vem a
 
 Para realizar essa tarefa vamos usar:
 
-- Medir o caudal
+- Instrumentos de medição 
   - [Arduino MKR Wan 1310]( https://store.arduino.cc/mkr-wan-1310)
   - Um sensor improvisado (pretendia-se desenvolver uma solução real, mas devido ao Covid-19 essa tarefa ficou adiada)
 - Para armazenar e apresentar os dados
